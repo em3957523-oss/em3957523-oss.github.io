@@ -1,2 +1,0 @@
-ads.txt
-google.com, pub-9026863351080278, DIRECT, f08c47fec0942fa0
