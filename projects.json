@@ -1,0 +1,22 @@
+[
+  {
+    "title": "🚗 مشروع السيارة الذكية",
+    "description": "سيارة صغيرة تعمل بـ Arduino، مزودة بحساس Ultrasonic وسيرفو لتجنب العقبات.",
+    "link": "https://tdhouaya-ui.github.io/project00/car"
+  },
+  {
+    "title": "💡 مشروع الإنارة الذكية",
+    "description": "نظام إنارة يشتغل تلقائيًا عند وجود حركة باستخدام مستشعر PIR وArduino.",
+    "link": "https://tdhouaya-ui.github.io/project00/light"
+  },
+  {
+    "title": "🔊 مشروع جهاز التنبيه",
+    "description": "جهاز يصدر صوت 'توقف' عند اقتراب جسم من حساس Ultrasonic.",
+    "link": "https://tdhouaya-ui.github.io/project00/alarm"
+  },
+  {
+    "title": "🔫 مشروع السلاح الصغير",
+    "description": "سلاح صغير مصنوع بـ Arduino، حساس Ultrasonic، ليزر، وصفارة (Buzzer).",
+    "link": "https://tdhouaya-ui.github.io/project00/weapon"
+  }
+]
