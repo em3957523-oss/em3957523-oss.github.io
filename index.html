@@ -13,7 +13,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js?client=ca-pub-9682075855356738"
      crossorigin="anonymous"></script>
 
-<!-- ✅ AMP Auto Ads Library (كود 1) -->
+<!-- ✅ AMP Auto Ads Library -->
 <script async custom-element="amp-auto-ads"
         src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
 </script>
@@ -41,18 +41,24 @@ pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; 
 .copy-btn:hover { background: #388e3c; }
 </style>
 
-<!-- Google Analytics -->
+<!-- Google Analytics & Consent Mode -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KW6FFEKB21"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-KW6FFEKB21');
+
+// إعداد Consent Mode
+gtag('consent', 'default', {
+  'ad_storage': 'denied',
+  'analytics_storage': 'denied'
+});
 </script>
 </head>
 <body>
 
-<!-- ✅ AMP Auto Ads Placement (كود 2) -->
+<!-- ✅ AMP Auto Ads Placement -->
 <amp-auto-ads type="adsense"
         data-ad-client="ca-pub-9682075855356738">
 </amp-auto-ads>
@@ -63,7 +69,7 @@ gtag('config', 'G-KW6FFEKB21');
 
 <h1>💡 Arduino Projects with Code 💡</h1>
 
-<!-- 🟢 إعلان عرضي (Display Ad) -->
+<!-- 🟢 إعلان عرضي -->
 <ins class="adsbygoogle"
      style="display:block; text-align:center;"
      data-ad-client="ca-pub-9026863351080278"
@@ -85,6 +91,54 @@ gtag('config', 'G-KW6FFEKB21');
 
 <div id="projectsContainer"></div>
 
+<!-- ✅ CMP Consent Banner -->
+<script>
+function showConsentBanner() {
+  const banner = document.createElement('div');
+  banner.id = 'consent-banner';
+  banner.style.position = 'fixed';
+  banner.style.bottom = '0';
+  banner.style.left = '0';
+  banner.style.right = '0';
+  banner.style.background = '#0277bd';
+  banner.style.color = '#fff';
+  banner.style.padding = '15px';
+  banner.style.textAlign = 'center';
+  banner.style.zIndex = '9999';
+  banner.style.fontSize = '16px';
+  banner.innerHTML = `
+    🌐 هذا الموقع يستخدم الكوكيز والإعلانات. <br><br>
+    <button onclick="acceptConsent()" style="margin:5px;padding:5px 12px;background:#4caf50;color:white;border:none;border-radius:5px;cursor:pointer;">موافقة ✅</button>
+    <button onclick="rejectConsent()" style="margin:5px;padding:5px 12px;background:#f44336;color:white;border:none;border-radius:5px;cursor:pointer;">رفض ❌</button>
+    <button onclick="manageConsent()" style="margin:5px;padding:5px 12px;background:#ffc107;color:white;border:none;border-radius:5px;cursor:pointer;">إدارة ⚙️</button>
+  `;
+  document.body.appendChild(banner);
+}
+
+function acceptConsent() {
+  gtag('consent', 'update', {
+    'ad_storage': 'granted',
+    'analytics_storage': 'granted'
+  });
+  document.getElementById('consent-banner').remove();
+}
+
+function rejectConsent() {
+  gtag('consent', 'update', {
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied'
+  });
+  document.getElementById('consent-banner').remove();
+}
+
+function manageConsent() {
+  alert('هنا يمكنك إضافة خيارات أكثر لإدارة الكوكيز والإعلانات.');
+}
+
+window.addEventListener('load', showConsentBanner);
+</script>
+
+<!-- Firebase + Projects Code -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getDatabase, ref, set, update, increment, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
@@ -96,7 +150,7 @@ const firebaseConfig = {
   projectId: "arduino-projects-with-code",
   storageBucket: "arduino-projects-with-code.firebasestorage.app",
   messagingSenderId: "270851114359",
-  appId: "1:270851114359:web:8644c43de6789b6b0c8d72",
+  appId: "1:270851114359:web:864c43de6789b6b0c8d72",
   measurementId: "G-KW6FFEKB21"
 };
 
