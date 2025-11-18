@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -229,3 +230,207 @@ loadProjectsFromFirebase();
 
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arduino Projects</title>
+
+<!-- Google Site Verification -->
+<meta name="google-site-verification" content="k6c9g_1RBvchIdYEEi6oBwIAzo4H20m8k-IA4qQ1Hsg" />
+
+<!-- Google AdSense (Auto Ads) -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9682075855356738"
+     crossorigin="anonymous"></script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KW6FFEKB21"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-KW6FFEKB21');
+</script>
+
+<style>
+body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+h1 { color: #0277bd; }
+.new-project { margin-bottom: 30px; }
+.new-project input, .new-project textarea { width: 80%; padding: 8px; margin: 5px 0; }
+.new-project button { background: #0277bd; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+.new-project button:hover { background: #01579b; }
+.project { border: 1px solid #ccc; padding: 10px; margin: 10px auto; width: 90%; border-radius: 8px; text-align: left; }
+.stats { margin-top: 5px; }
+.icons span { margin-right: 15px; cursor: pointer; }
+pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+.copy-btn { background: #4caf50; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; float: right; }
+.copy-btn:hover { background: #388e3c; }
+</style>
+
+</head>
+<body>
+
+<div style="text-align:center; margin-bottom:20px;">
+  <img src="Talel.png" alt="Arduino Projects Logo" width="200" height="200">
+</div>
+
+<h1>💡 Arduino Projects with Code 💡</h1>
+
+<button onclick="showAddProject()">Add New Project (Owner Only)</button>
+
+<div class="new-project" id="addProjectDiv" style="display:none;">
+  <h3>Add Your Own Arduino Project 🧠</h3>
+  <input type="text" id="newTitle" placeholder="Project Title">
+  <textarea id="newCode" rows="6" placeholder="Paste your Arduino code here"></textarea>
+  <button onclick="addProject()">Add Project</button>
+</div>
+
+<div id="projectsContainer"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, update, increment, get } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "REMOVE_ME_REPLACE_WITH_ENV",
+  authDomain: "arduino-projects-with-code.firebaseapp.com",
+  databaseURL: "https://arduino-projects-with-code-default-rtdb.europe-west1.firebasedatabase.app/",
+  projectId: "arduino-projects-with-code",
+  storageBucket: "arduino-projects-with-code.firebasestorage.app",
+  messagingSenderId: "270851114359",
+  appId: "1:270851114359:web:8644c43de6789b6b0c8d72",
+  measurementId: "G-KW6FFEKB21"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const OWNER_PASSWORD = "talel123";
+
+let visitorID = localStorage.getItem("visitorID");
+if (!visitorID) {
+  visitorID = crypto.randomUUID();
+  localStorage.setItem("visitorID", visitorID);
+}
+
+let projects = [];
+const container = document.getElementById("projectsContainer");
+
+async function loadProjectsFromFirebase() {
+  const dbRef = ref(db, "projects/");
+  const snapshot = await get(dbRef);
+  projects = [];
+
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    for (const id in data) {
+      const p = data[id];
+      if (p && p.title && p.code) {
+        projects.push({ id, title: p.title, code: p.code });
+      }
+    }
+  }
+  renderProjects();
+}
+
+async function renderProjects() {
+  container.innerHTML = "";
+  
+  if (projects.length === 0) {
+    container.innerHTML = "<p>No projects yet.</p>";
+    return;
+  }
+
+  for (let i = 0; i < projects.length; i++) {
+    const p = projects[i];
+    const div = document.createElement("div");
+    div.className = "project";
+    div.innerHTML = `
+      <button class="toggle" onclick="toggleCode(${i})">⬇️</button>
+      <h3>${p.title}</h3>
+      <div class="stats">
+        <div class="icons">
+          <span id="views-${p.id}">👁️ 0 views</span>
+          <span id="likes-${p.id}" onclick="likeProject('${p.id}')">❤️ 0</span>
+        </div>
+      </div>
+      <pre id="code-${i}" style="display:none;">
+        <button class="copy-btn" onclick="copyCode('${p.id}')">📋 Copy</button>
+        <code>${p.code}</code>
+      </pre>
+    `;
+    container.appendChild(div);
+
+    const projectRef = ref(db, "projects/" + p.id);
+    const snapshot = await get(projectRef);
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      document.getElementById("views-" + p.id).innerText = `👁️ ${data.views || 0} views`;
+      document.getElementById("likes-" + p.id).innerText = `❤️ ${data.likes || 0}`;
+    }
+
+    const visitorRef = ref(db, `projects/${p.id}/visitors/${visitorID}`);
+    const visitorSnap = await get(visitorRef);
+    if (!visitorSnap.exists()) {
+      update(projectRef, { views: increment(1) });
+      await set(visitorRef, true);
+    }
+  }
+}
+
+window.showAddProject = function() {
+  const enteredPass = prompt("Enter password:");
+  if (enteredPass === OWNER_PASSWORD) {
+    document.getElementById("addProjectDiv").style.display = "block";
+  } else alert("❌ Access denied!");
+};
+
+window.addProject = async function() {
+  const title = document.getElementById("newTitle").value.trim();
+  const code = document.getElementById("newCode").value.trim();
+  if (!title || !code) return alert("⚠️ Enter title and code!");
+
+  const id = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+  try {
+    await set(ref(db, "projects/" + id), {
+      title,
+      code,
+      views: 0,
+      likes: 0
+    });
+
+    alert("✅ Project added successfully!");
+    document.getElementById("newTitle").value = "";
+    document.getElementById("newCode").value = "";
+    loadProjectsFromFirebase();
+  } catch (err) {
+    console.error(err);
+    alert("❌ Failed to add project.");
+  }
+};
+
+window.likeProject = async function(id) {
+  update(ref(db, "projects/" + id), { likes: increment(1) });
+};
+
+window.copyCode = function(id) {
+  const project = projects.find(p => p.id === id);
+  if (project) {
+    navigator.clipboard.writeText(project.code);
+    alert("✅ Code copied!");
+  }
+};
+
+window.toggleCode = function(i) {
+  const codeBlock = document.getElementById(`code-${i}`);
+  codeBlock.style.display = codeBlock.style.display === "block" ? "none" : "block";
+};
+
+loadProjectsFromFirebase();
+</script>
+
+</body>
+</html>
+>>>>>>> ebbdd9ca2a80c225cd70f65d2fda53ac5503405d
